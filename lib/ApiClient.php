@@ -194,7 +194,7 @@ class ApiClient {
 
           $headerParams['Authorization'] = 'Bearer ' . Configuration::$access_token;
           break;
-          
+
         case 'basicAuth':
           $authString = Configuration::$username . ":" . Configuration::$password;
           $headerParams['Authorization'] = 'Basic ' . base64_encode($authString);
@@ -309,9 +309,8 @@ class ApiClient {
     } else if ($response_info['http_code'] >= 200 && $response_info['http_code'] <= 299 ) {
       $data = json_decode($http_body);
       if ($response_info['http_code'] == 201) {
-        $data = !isset(self::http_parse_headers($http_header)["Location"])
-        ? self::http_parse_headers($http_header)["location"]
-        : self::http_parse_headers($http_header)["Location"];
+          $parsed = self::http_parse_headers($http_header);
+        $data = isset($parsed["Location"]) ? $parsed["Location"] : $parsed["location"];
       }
       else if (json_last_error() > 0) { // if response is a string
         $data = $http_body;
